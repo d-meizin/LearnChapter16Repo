@@ -1,6 +1,8 @@
 package com.chapter16;
 
 import static java.lang.System.out;
+
+import java.lang.reflect.InvocationTargetException;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.Connection;
@@ -12,16 +14,15 @@ class GetData {
 	public static void main(String[] args) {
 		NumberFormat currency = NumberFormat.getCurrencyInstance();
 		final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
-		final String CONNECTION = "jdbc:derby:AccountsDatabase";
+		final String CONNECTION = "jdbc:derby:MeizinDatabase;create=true";
 		
 		try {
-			
-			Class.forName(DRIVER).newInstance();
-		} catch (InstantiationException e) {
+			//Class.forName(DRIVER).newInstance();
+			Class.forName(DRIVER).getDeclaredConstructor().newInstance();
+				
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException e) {
 			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
 		
@@ -37,6 +38,7 @@ class GetData {
 				out.print(" ");
 				out.println(currency.format(resultset.
 						getFloat("BALANCE")));
+				out.println("* * * * * * *");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
